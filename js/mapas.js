@@ -24,7 +24,6 @@
 	var rutas = {};
 
 //variable geocoder para conversion
-geocoder = L.mapbox.geocoder('mapbox.places');
 
 //funcion principal, carga el mapa y sirve como funcion callback
 //para las solicitudes a la JS API de google maps
@@ -47,17 +46,20 @@ function initMap(){
 	var control = L.control.layers(null, rutas);
 	//se carga el selector al mapa
 	control.addTo(map);	
-	geocoderC = L.mapbox.geocoderControl('mapbox.places', {keepOpen: true, autocomplete: true});
-	geocoderC.addTo(map);
 };
 	
 
-/*
-function address(){
-	//var inAddress = document.getElementById('address').value;
-	geocoder.query('Chester, NJ', function(error, result){
-		console.log(result);
-	});
 
+function searchAddress(){
+	var inAddress = document.getElementById('address').value;
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode({address: inAddress}, function(results, status){
+		var lng = results[0].geometry.location.lng();
+		var lat = results[0].geometry.location.lat();
+		
+		if (status == google.maps.GeocoderStatus.OK){
+			L.marker([lat, lng]).addTo(map);
+			document.getElementById('address').value = '';
+		}
+	});
 };
-*/
