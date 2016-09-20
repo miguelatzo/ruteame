@@ -1,7 +1,9 @@
 	//token de acceso a mapbox
 	accessToken = L.mapbox.accessToken = 'pk.eyJ1IjoiaXNhYWNhdmlsYSIsImEiOiJjaXNoejAwMXowMDBvMnBud3FsOWFjZWl1In0.LJhyNscjlcr_ZONnc_BP_Q';
 
-	//map
+	//marker para el geocode
+	var marker = null;
+	//el mapa principal
 	var map;
 	//array con ID de las rutas para identificacion de layers y colours
 	rutasID = [ '1', '10', '11', '13', '13_a', '14', '15', '17', '19',
@@ -53,13 +55,18 @@ function initMap(){
 function searchAddress(){
 	var inAddress = document.getElementById('address').value;
 	var geocoder = new google.maps.Geocoder();
+
 	geocoder.geocode({address: inAddress}, function(results, status){
 		var lng = results[0].geometry.location.lng();
 		var lat = results[0].geometry.location.lat();
 		
-		if (status == google.maps.GeocoderStatus.OK){
-			L.marker([lat, lng]).addTo(map);
-			document.getElementById('address').value = '';
+		if (status == google.maps.GeocoderStatus.OK && marker == null){
+			marker = L.marker([lat, lng]);
+			marker.addTo(map);
+		}else{
+			marker.setLatLng([lat, lng]);
 		}
+		
+		document.getElementById('address').value = '';
 	});
 };
